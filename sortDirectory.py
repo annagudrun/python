@@ -40,8 +40,7 @@ def sortDirectory(dir):
                     if not os.path.exists(newPath):
                         os.mkdir(newPath)
                     if not os.path.exists(newPath +  '/' + file):
-                        print('newpath!!!: ' + newPath)
- #                      shutil.move(file, newPath)
+  #                      shutil.move(file, newPath)
                         os.rename(file_path, newPath +  '/' + file)
                         print(file + " MOVED")
     #flokkar eftir serium
@@ -63,6 +62,7 @@ def move_to_season_folders(episode_folder):
         for file in files:
             seas_type1 = re.search(r'[sS]\d+',file)
             seas_type2 = re.search(r'\[[0-9]+x\]\d+|[0-9]+x\d+',file)
+            seas_type3 = re.search(r'[0-9]{3}', file)
             file_path = os.path.join(episode_folder, file)
             if seas_type1:
                 seas = seas_type1.group()
@@ -86,3 +86,13 @@ def move_to_season_folders(episode_folder):
                 else:
                     new_folder = os.path.join(episode_folder, seas_to_use)
                     shutil.move(file_path, new_folder)
+            elif seas_type3:
+                seas = seas_type3.group()
+                seas = 's' + '0' + seas[0]
+                if not os.path.exists(os.path.join(episode_folder, seas)):
+                    new_folder = os.mkdir(os.path.join(episode_folder, seas))
+                else:
+                    new_folder = os.path.join(episode_folder, seas)
+                    shutil.move(file_path, new_folder)
+                
+                
