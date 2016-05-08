@@ -61,22 +61,33 @@ def move_to_season_folders(episode_folder):
     for root,dirs,files in os.walk(episode_folder):
         for file in files:
             seas_type1 = re.search(r'[sS]\d+',file)
-            seas_type2 = re.search(r'\[[0-9]+x\d+|[0-9]+x\d+',file)
+            seas_type2 = re.search(r'\[[0-9]+x\]\d+|[0-9]+x\d+',file)
             file_path = os.path.join(episode_folder, file)
             if seas_type1:
                 seas = seas_type1.group()
+                if len(seas) == 2:
+                    seas = seas[0] + '0' + seas[1]
+                seas = seas.lower()
+                print('type1: ' + seas)
                 if not os.path.exists(os.path.join(episode_folder,seas)):
                     new_folder = os.mkdir(os.path.join(episode_folder,seas))
                 else:
                     new_folder = os.path.join(episode_folder,seas)
                     shutil.move(file_path, new_folder)
-                    print('newfold: ' + new_folder)
             elif seas_type2:
                 seas = seas_type2.group()
-                if not os.path.exists(os.path.join(episode_folder,seas)):
-                    new_folder = os.mkdir(os.path.join(episode_folder,seas))
+                
+                new_seas = seas.split('x')
+                if len(new_seas[0]) == 1:
+                    seas_to_use = 's' + '0' + new_seas[0]
                 else:
-                    new_folder = os.path.join(episode_folder,seas)
+                    seas_to_use = 's'+ new_seas[0]
+                
+                print('!!!!!seas: ' + seas_to_use)
+                if not os.path.exists(os.path.join(episode_folder, seas_to_use)):
+                    new_folder = os.mkdir(os.path.join(episode_folder, seas_to_use))
+                else:
+                    new_folder = os.path.join(episode_folder, seas_to_use)
                     shutil.move(file_path, new_folder)
 
 
