@@ -1,5 +1,6 @@
 import os
 import re
+import shutil
 
 VIDEO_TYPES = ('.wmv', '.mov', '.avi', '.divx', '.mpeg', '.mpg', '.m4p', '.3gp', '.amv', '.qt', '.rm', '.swf', '.mp4', '.mkv')
 TRASH = ('.nfo' '.txt.')
@@ -37,8 +38,12 @@ def sortDirectory(dir):
                     if not os.path.exists(newPath):
                         os.mkdir(newPath)
                     if not os.path.exists(newPath +  '/' + file):
+                        print('newpath!!!: ' + newPath)
+ #                       shutil.move(file, newPath)
                         os.rename(file_path, newPath +  '/' + file)
                         print(file + " MOVED TO " + newPath)
+                        
+    move_to_season_folders(newPath)
 
 
 def find_file(input_query, file_name):
@@ -47,5 +52,31 @@ def find_file(input_query, file_name):
     file_name = re.sub(r'\W+', '', file_name)
     if input_query.lower() in file_name.lower():
         return True
-
     return False
+
+def move_to_season_folders(episode_folder):
+
+    os.chdir(episode_folder)
+    print('episode folder: ' + episode_folder)
+    for root,dirs,files in os.walk(episode_folder):
+        for file in files:
+            seas_type1 = re.search(r'[sS]\d+',file)
+            seas_type2 = re.search(r'\[[0-9]+x\d+|[0-9]+x\d+',file)
+            file_path = os.path.join(episode_folder, file)
+            if seas_type1:
+                seas = seas_type1.group()
+                if not os.path.exists(os.path.join(episode_folder,seas)):
+                    new_folder = os.mkdir(os.path.join(episode_folder,seas))
+                else:
+                    new_folder = os.path.join(episode_folder,seas)
+                    shutil.move(file_path, new_folder)
+                    print('newfold: ' + new_folder)
+            elif seas_type2:
+                seas = seas_type2.group()
+                if not os.path.exists(os.path.join(episode_folder,seas)):
+                    new_folder = os.mkdir(os.path.join(episode_folder,seas))
+                else:
+                    new_folder = os.path.join(episode_folder,seas)
+                    shutil.move(file_path, new_folder)
+
+
