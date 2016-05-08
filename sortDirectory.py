@@ -1,7 +1,7 @@
 import os
 import re
 
-VIDEO_TYPES = ('.wmv', '.mov', '.avi', '.divx', '.mpeg', '.mpg', '.m4p', '.3gp', '.amv', '.qt', '.rm', '.swf', '.mp4', '.mkv')
+VIDEO_TYPES = ('.wmv', '.mov', '.avi', '.divx', '.mpeg', '.mpg', '.m4p', '.3gp', '.amv', '.qt', '.rm', '.swf', '.mp4', '.mkv', '.mp3', '.srt', '.sup')
 TRASH = ('nfo', 'txt', 'dat', 'jpg','torrent','ini' )
 
 def inputPath():
