@@ -4,14 +4,16 @@ import shutil
 
 VIDEO_TYPES = ('.wmv', '.mov', '.avi', '.divx', '.mpeg', '.mpg', '.m4p', '.3gp', '.amv', '.qt', '.rm', '.swf', '.mp4', '.mkv')
 TRASH = ('.nfo' '.txt.')
+
 def sortDirectory(dir):
 
     path = input('Full path to folder: ')
+    if not os.path.isdir(path):
+        print('Invalid path, try again!')
+        path = input('Full path to folder: ')
     search = input('Name of show: ')
     episode_folder = input('Name of folder: ')
-   #gera edge case her ef tetta skyldi ekki vera rett
-   #if not os.path.isdir(path):
-
+   
     os.chdir(path)
 
     showFolder = ''
@@ -29,7 +31,7 @@ def sortDirectory(dir):
         for file in files:
             if file.endswith(VIDEO_TYPES):
                 file_path = os.path.join(root, file)                                              
-                found = find_file(search, file)
+                found = find_episode(search, file)
                 # found gefur true ef tatturinn passar vid leitar streng
                 #ta buum vid til moppu og faerum tattinn yfir
                 #notandi velur nafn a moppunni 
@@ -39,14 +41,13 @@ def sortDirectory(dir):
                         os.mkdir(newPath)
                     if not os.path.exists(newPath +  '/' + file):
                         print('newpath!!!: ' + newPath)
- #                       shutil.move(file, newPath)
+ #                      shutil.move(file, newPath)
                         os.rename(file_path, newPath +  '/' + file)
-                        print(file + " MOVED TO " + newPath)
-                        
+                        print(file + " MOVED")
+    #flokkar eftir serium
     move_to_season_folders(newPath)
 
-
-def find_file(input_query, file_name):
+def find_episode(input_query, file_name):
     file_name = file_name.replace('_', '')
     input_query = re.sub(r'\W+', '', input_query) #taka ut non alpha symbolds
     file_name = re.sub(r'\W+', '', file_name)
@@ -68,7 +69,6 @@ def move_to_season_folders(episode_folder):
                 if len(seas) == 2:
                     seas = seas[0] + '0' + seas[1]
                 seas = seas.lower()
-                print('type1: ' + seas)
                 if not os.path.exists(os.path.join(episode_folder,seas)):
                     new_folder = os.mkdir(os.path.join(episode_folder,seas))
                 else:
@@ -76,18 +76,13 @@ def move_to_season_folders(episode_folder):
                     shutil.move(file_path, new_folder)
             elif seas_type2:
                 seas = seas_type2.group()
-                
                 new_seas = seas.split('x')
                 if len(new_seas[0]) == 1:
                     seas_to_use = 's' + '0' + new_seas[0]
                 else:
                     seas_to_use = 's'+ new_seas[0]
-                
-                print('!!!!!seas: ' + seas_to_use)
                 if not os.path.exists(os.path.join(episode_folder, seas_to_use)):
                     new_folder = os.mkdir(os.path.join(episode_folder, seas_to_use))
                 else:
                     new_folder = os.path.join(episode_folder, seas_to_use)
                     shutil.move(file_path, new_folder)
-
-
