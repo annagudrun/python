@@ -2,9 +2,17 @@ import os
 import re
 import shutil
 
-VIDEO_TYPES = ('.wmv', '.mov', '.avi', '.divx', '.mpeg', '.mpg', '.m4p', '.3gp', '.amv', '.qt', '.rm', '.swf', '.mp4', '.mkv')
-TRASH = ('.nfo' '.txt.')
-def sortDirectory(dir):
+VIDEO_TYPES = ('.wmv', '.mov', '.avi', '.divx', '.mpeg', '.mpg', '.m4p', '.3gp', '.amv', '.qt', '.rm', '.swf', '.mp4', '.mkv', '.mp3', '.srt', '.sup')
+TRASH = ('.nfo', '.txt', '.dat', '.jpg','.torrent','.ini', '.mta' )
+
+def inputPath():
+    path = input('Enter full path to folder: ')
+    while not os.path.exists(path):
+        print('Invalid path, try again')
+        path = input('Enter full path to folder: ')
+    return path
+
+def sortDirectory(path):
 
     path = input('Full path to folder: ')
     search = input('Name of show: ')
@@ -44,7 +52,7 @@ def sortDirectory(dir):
                         print(file + " MOVED TO " + newPath)
                         
     move_to_season_folders(newPath)
-
+    delete(path)   
 
 def find_file(input_query, file_name):
     file_name = file_name.replace('_', '')
@@ -79,4 +87,27 @@ def move_to_season_folders(episode_folder):
                     new_folder = os.path.join(episode_folder,seas)
                     shutil.move(file_path, new_folder)
 
+def delete(path):
+    #remove files with trash endings like .nfo,.torrent, etc.
+    for root, dirs, files in os.walk(path):
+        for file in files:
+            if file.endswith(TRASH):
+                os.remove(os.path.join(root,file))
+        removeEmpty(path)
 
+# recursive function to remove empty folders
+def removeEmpty(path):
+    if not os.path.isdir(path):
+        return
+    if os.path.isdir(path):
+            f = os.listdir(path)
+            if len(f)>0:
+                for file in f:
+                    f_path = os.path.join(path,file)
+                    if os.path.isdir(f_path):
+                        removeEmpty(f_path)
+            if len(f) == 0:
+                print("Removing: ", path)
+                os.rmdir(path)
+                
+sortDirectory(inputPath())
