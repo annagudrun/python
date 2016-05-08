@@ -11,8 +11,8 @@ If subtitles exist for tv-shows, they will be moved along with the video files.
 
 Example:
 
-Enter full path to folder: Downloads
-Invalid path, try again
-Enter full path to folder: /Users/thorgerdur/Desktop/verk4/python/sortDirectory.py
-Name of show: Desperate Housewifes
-Name of folder: Despo
+Enter full path to folder: Downloads  
+Invalid path, try again  
+Enter full path to folder: /Users/thorgerdur/Desktop/verk4/python/sortDirectory.py  
+Name of show: Desperate Housewifes  
+Name of folder: Despo  
